@@ -116,3 +116,5 @@ resnet152*
 
 *.ipynb
 workdirs
+
+*.json

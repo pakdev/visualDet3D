@@ -6,6 +6,7 @@ import cv2
 from copy import deepcopy
 import skimage.measure
 import torch
+from easydict import EasyDict as edict
 
 from _path_init import *
 from visualDet3D.networks.heads.anchors import Anchors
@@ -92,7 +93,8 @@ def read_one_split(cfg, index_names, data_root_dir, output_dict, data_split = 't
                         uniform_sum_each_type[j, :] += np.sum(data, axis=0)
                         uniform_square_each_type[j, :] += np.sum(data ** 2, axis=0)
         else:
-            data_frame.label = [obj for obj in label.data if obj.type in cfg.obj_types]
+            data_frame.label = [edict({"type": "Unknown"})]
+            # data_frame.label = [obj for obj in label.data if obj.type in cfg.obj_types]
         data_frame.calib = calib
         
 
@@ -196,12 +198,13 @@ def main(config:str="config/config.py"):
                 "velodyne": False,
             }
 
-    train_names, val_names = process_train_val_file(cfg)
-    read_one_split(cfg, train_names, data_root_dir, output_dict, 'training', time_display_inter)
+    # train_names, val_names = process_train_val_file(cfg)
+    # read_one_split(cfg, train_names, data_root_dir, output_dict, 'training', time_display_inter)
+    val_names = [str(n).zfill(6) for n in range(669)]
     output_dict = {
                 "calib": True,
                 "image": False,
-                "label": True,
+                "label": False,
                 "velodyne": False,
             }
     read_one_split(cfg, val_names, data_root_dir, output_dict, 'validation', time_display_inter)
